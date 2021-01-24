@@ -3,4 +3,6 @@
 out
 gen
 train_data
+patch_data
 *.csv
+__pycache__
