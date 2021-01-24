@@ -13,15 +13,15 @@ def get_dataset(save_num = 0):
     '''
     :return: train set,val set
     '''
-    train_data_info_path = "/Coronary-Artery-Tracking-via-3D-CNN-Classification/data_process_tools/patch_data/centerline_patch/train_save_d"+str(save_num)+"_train.csv"
-    train_pre_fix_path = "/data_process_tools/patch_data/"
+    train_data_info_path = "../data_process_tools/patch_data/centerline_patch/train_save_d"+str(save_num)+"_train.csv"
+    train_pre_fix_path = "../data_process_tools/patch_data/"
     train_flag = 'train'
     train_transforms = None
     target_transform = None
     train_dataset = DataGenerater(train_data_info_path, train_pre_fix_path, 500, train_transforms, train_flag, target_transform)
 
-    val_data_info_path = "/Coronary-Artery-Tracking-via-3D-CNN-Classification/data_process_tools/patch_data/centerline_patch/train_save_d"+str(save_num)+"_val.csv"
-    val_pre_fix_path = "/data_process_tools/patch_data/"
+    val_data_info_path = "../data_process_tools/patch_data/centerline_patch/train_save_d"+str(save_num)+"_val.csv"
+    val_pre_fix_path = "../data_process_tools/patch_data/"
     val_flag = 'val'
     test_valid_transforms = None
     target_transform = None
