@@ -362,5 +362,5 @@ def get_closer_distence(vessels,target_point):
             if dist<min_dis:
                 min_dis = dist
                 closer_point = curr_point
-    print('closer point:', closer_point)
+    # print('closer point:', closer_point)
     return min_dis
