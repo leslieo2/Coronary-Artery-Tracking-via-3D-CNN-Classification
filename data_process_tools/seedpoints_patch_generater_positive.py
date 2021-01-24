@@ -39,7 +39,7 @@ def creat_data(path_name,spacing_path,gap_size,save_num):
 
     vessels = []
     for j in range(4):
-        reference_path = '/data_process_tools/train_data/dataset0'+str(i)+'/vessel' + str(j) + '/reference.txt'
+        reference_path = 'train_data/dataset0'+str(i)+'/vessel' + str(j) + '/reference.txt'
         txt_data = np.loadtxt(reference_path, dtype=np.float32)
         temp_center = txt_data[..., 0:3]
         vessels.append(temp_center)
@@ -88,10 +88,10 @@ def creat_data(path_name,spacing_path,gap_size,save_num):
                                 center_z_pixel = new_z
 
                                 target_point = np.array([center_x_pixel, center_y_pixel, center_z_pixel])
-                                print("new center:", target_point)
+                                # print("new center:", target_point)
                                 min_dis = get_closer_distence(vessels, target_point)
                                 curr_proximity = get_proximity(min_dis,cutoff_value=4)
-                                print('proximity:', curr_proximity)
+                                # print('proximity:', curr_proximity)
                                 cut_size = 9
 
                                 left_x = center_x_pixel - cut_size
@@ -111,7 +111,7 @@ def creat_data(path_name,spacing_path,gap_size,save_num):
                                     if not os.path.exists(folder_path):
                                         os.makedirs(folder_path)
                                     record_name = 'seeds_patch/positive/' + 'gp_' + str(gap_size) + '/d' + str(i) + '/' + 'd_' + str(i) + '_v_' +str(v)+ '_x_' + str(center_x_pixel) + '_y_' + str(center_y_pixel) + '_z_' + str(center_z_pixel) + '.nii.gz'
-                                    print(record_name)
+                                    # print(record_name)
                                     org_name = './patch_data/' + record_name
                                     out = sitk.GetImageFromArray(new_src_arr)
                                     sitk.WriteImage(out, org_name)
@@ -119,8 +119,8 @@ def creat_data(path_name,spacing_path,gap_size,save_num):
                                     patch_name.append(record_name)
                                     counter += 1
 
-                                else:
-                                    print('out of bounder skip this block')
+                                # else:
+                                    # print('out of bounder skip this block')
             # break
 
     return patch_name, proximity_list

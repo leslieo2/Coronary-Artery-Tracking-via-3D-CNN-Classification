@@ -51,7 +51,7 @@ def creat_data(max_points,path_name,spacing_path,gap_size,save_num):
         for j in range(start_ind, end_ind + 1):
         # for j in range(start_ind, start_ind + 1):
             if j % gap_size == 0:
-                print('j:', j)
+                # print('j:', j)
                 center_x = center[j][0]
                 center_y = center[j][1]
                 center_z = center[j][2]
@@ -61,8 +61,8 @@ def creat_data(max_points,path_name,spacing_path,gap_size,save_num):
                 org_z_pixel = get_spacing_res2(center_z, spacing_z, resize_factor[0])
 
                 if org_x_pixel!=last_center_x_pixel or org_y_pixel!=last_center_y_pixel or org_z_pixel!=last_center_z_pixel:
-                    print("last:",[last_center_x_pixel,last_center_y_pixel,last_center_z_pixel])
-                    print("curr:",[org_x_pixel, org_y_pixel, org_z_pixel])
+                    # print("last:",[last_center_x_pixel,last_center_y_pixel,last_center_z_pixel])
+                    # print("curr:",[org_x_pixel, org_y_pixel, org_z_pixel])
                     last_center_x_pixel = org_x_pixel
                     last_center_y_pixel = org_y_pixel
                     last_center_z_pixel = org_z_pixel
