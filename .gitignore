@@ -3,6 +3,10 @@
 out
 gen
 train_data
-patch_data
+no_offset
+offset
+positive
+postive
+negative
 *.csv
 __pycache__
