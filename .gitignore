@@ -9,4 +9,5 @@ positive
 postive
 negative
 *.csv
+*.txt
 __pycache__
