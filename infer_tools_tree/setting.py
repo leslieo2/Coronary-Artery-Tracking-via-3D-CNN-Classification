@@ -33,7 +33,7 @@ prob_thr = setting_info["prob_thr"]
 max_size = setting_info["max_size"]
 print("load net")
 infer_model = CenterlineNet(n_classes=max_points)
-checkpoint = torch.load(checkpoint_path_infer, map_location='cpu')
+checkpoint = torch.load(checkpoint_path_infer)
 net_dict = checkpoint['net_dict']
 infer_model.load_state_dict(net_dict)
 infer_model.to(device)
