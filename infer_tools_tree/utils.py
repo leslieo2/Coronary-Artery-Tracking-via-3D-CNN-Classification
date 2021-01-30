@@ -6,6 +6,7 @@ import math
 import copy
 import cv2
 from skimage import measure
+from setting import device
 import pandas as pd
 
 def resample(imgs, spacing, new_spacing, order=2):
@@ -94,7 +95,7 @@ def get_shell(fl_Num_Points, fl_Radius):
 def prob_terminates(pre_y, max_points):
 
     res = torch.sum(-pre_y * torch.log2(pre_y))
-    return res / torch.log2(torch.from_numpy(np.array([max_points])).float())
+    return res / torch.log2(torch.from_numpy(np.array([max_points])).float().to(device))
 
 
 def get_closer_distance(vessel, target_point):
