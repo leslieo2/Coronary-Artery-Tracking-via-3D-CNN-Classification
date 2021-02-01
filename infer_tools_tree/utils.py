@@ -6,7 +6,6 @@ import math
 import copy
 import cv2
 from skimage import measure
-from setting import device
 import pandas as pd
 
 def resample(imgs, spacing, new_spacing, order=2):
