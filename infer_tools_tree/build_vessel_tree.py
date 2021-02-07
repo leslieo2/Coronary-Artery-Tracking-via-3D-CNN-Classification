@@ -10,6 +10,11 @@ from setting import infer_model, device, spacing, re_spacing_img, resize_factor,
 from utils import get_spacing_res2, data_preprocess, prob_terminates, get_shell, get_angle
 from tree import TreeNode
 
+from mpl_toolkits import mplot3d
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+
 def search_tree(root: TreeNode, point):
     '''
     BFS tree, determine whether the current input point is close to the existing centerline
@@ -23,11 +28,13 @@ def search_tree(root: TreeNode, point):
         vertex = queue.pop(0)
         point = np.array(point)
         dis_all = np.linalg.norm(point - vertex.value, axis=1)
+        print('vertex: {0}, piont: {1}, dis_all: {2}'.format(vertex.value, point, dis_all))
         dis = dis_all.min()
         index = dis_all.argmin()
-        if dis < 3:
+        # if dis < 3: # hardcode 3？
+        if dis < 70: 
             return vertex, index
-        nodes = vertex.child_list
+        nodes = vertex.child_list #这里的list为空
         for w in nodes:
             queue.append(w)
     return None
@@ -48,6 +55,8 @@ def dfs_search_tree(root: TreeNode):
     while len(stack_list) > 0:
         temp = []
         x = stack_list[-1]
+        print('x.value => ', x.value)
+        print('x.childs => ', x.child_list)
         for w in x.child_list:
             if w not in visited:
                 temp.append(w)
@@ -197,6 +206,8 @@ def search_one_direction(start: list, move_direction: list, prob_records: list, 
     prob_mean = sum(prob_records) / len(prob_records)
     cnt=0
     # while find_node_initial is None:
+    lines = []
+    lines.append(start)
     while prob_mean <= prob_thr and find_node_initial is None:
         # print('prob_records: ', prob_records)
         cnt += 1
@@ -214,14 +225,27 @@ def search_one_direction(start: list, move_direction: list, prob_records: list, 
             # 寻找下一个点
             move_direction, next_point = move(start=start, shell_arr=shell_arr, indexs=indexs,
                                          move_direction=move_direction)
+            lines.append(next_point)
             start = next_point                    
             if find_node is None:
                 find_node_initial = search_tree(root, next_point)
+                print('find_node_initial => ', find_node_initial)
             # if cnt >= 3:
             #     break
         else:
             break
     # print('cnt', cnt)
+    # fig = plt.figure()
+    # ax = plt.axes(projection='3d')
+
+    # lines = np.array(lines).T
+    # x=lines[0]
+    # y=lines[1]
+    # z=lines[2]
+    # ax.scatter(x, y, z)
+    # plt.plot(x,y,z)
+    # ax.set_title('seeds distribution')
+    # plt.show()
     return find_node_initial
 
 
