@@ -66,6 +66,7 @@ def dfs_search_tree(root: TreeNode):
 def infer(start: list):
     """
     :param start: Initial point
+    返回：移动方向，最大可能的方向所在索引，当前节点终止的可能性
     :return: Moving position, the index of maximum confidence direction, Current termination probability
     """
     max_z = re_spacing_img.shape[0]
@@ -95,7 +96,9 @@ def infer(start: list):
         for ind in range(left_z, right_z + 1):
             src_temp = re_spacing_img[ind].copy()
             new_patch[ind - left_z] = src_temp[left_y:right_y + 1, left_x:right_x + 1]
+        # print('new_patch: ', new_patch)
         input_data = data_preprocess(new_patch)
+        # print('input_data: ', input_data)
 
         inputs = input_data.to(device)
         outputs = infer_model(inputs.float())
@@ -106,9 +109,11 @@ def infer(start: list):
 
         outputs_1 = torch.nn.functional.softmax(outputs_1, 1)
         indexs = np.argsort(outputs_1.cpu().detach().numpy()[0])[::-1]
+        # print('indexs: ', indexs)
         curr_prob = prob_terminates(outputs_1, max_points).cpu().detach().numpy()[0]
         curr_r = outputs_2.cpu().detach().numpy()[0]
         sx, sy, sz = get_shell(max_points, curr_r)
+        # print('sx={0}, sy={1}, sz={2}', sx, sy, sz)
         return [sx, sy, sz], indexs, curr_r, curr_prob
     else:
         return None
@@ -190,8 +195,13 @@ def search_one_direction(start: list, move_direction: list, prob_records: list, 
     """
     find_node_initial = None
     prob_mean = sum(prob_records) / len(prob_records)
+    cnt=0
+    # while find_node_initial is None:
     while prob_mean <= prob_thr and find_node_initial is None:
+        # print('prob_records: ', prob_records)
+        cnt += 1
         result = infer(start=start)
+        # print('result: ', result)
         if result is not None:
             shell_arr, indexs, curr_r, curr_prob = result
             r_list.append(curr_r)
@@ -199,12 +209,19 @@ def search_one_direction(start: list, move_direction: list, prob_records: list, 
             prob_records.pop(0)
             prob_records.append(curr_prob)
             prob_mean = sum(prob_records) / len(prob_records)
+            # if cnt % 50 == 0:
+            # print('prob_mean: ', prob_mean)
+            # 寻找下一个点
             move_direction, next_point = move(start=start, shell_arr=shell_arr, indexs=indexs,
                                          move_direction=move_direction)
+            start = next_point                    
             if find_node is None:
                 find_node_initial = search_tree(root, next_point)
+            # if cnt >= 3:
+            #     break
         else:
             break
+    # print('cnt', cnt)
     return find_node_initial
 
 
@@ -240,6 +257,7 @@ def search_line(start, curr_r, direction, prob_records, root: TreeNode):
 
     # If the current point is within 200 points from the end of the centerline,
     # it will be spliced with the current centerline, otherwise it will be set as a new branch
+    print('find_node_forward: {0}, find_node_backward: {1}'.format(find_node_forward, find_node_backward))
     add_thr = 200
     if find_node_forward is not None:
         point_forward_list.reverse()
@@ -297,13 +315,19 @@ def build_vessel_tree(seeds: np.ndarray, root: TreeNode):
     '''
     prob_records = [0] * 3
     seeds_unused = []
-    for seed in seeds:
+    print('bofore: ', len(seeds) // 10)
+    for seed in seeds[:len(seeds) // 10]:
         if search_tree(root, seed) is None:
+            # 寻找初始化的点和半径，得到两个初始化的方向d0和d0'
             direction, prob_records, curr_r = search_first_node(start=seed, prob_records=prob_records)
+            print('first node:', direction, prob_records, curr_r)
             find = search_line(start=seed, curr_r=curr_r, prob_records=prob_records, direction=direction, root=root)
+            print('find: ', find)
             if not find:
                 seeds_unused.append(seed)
+    print('seeds_unused: ', len(seeds_unused))
     for seed in seeds_unused:
         if search_tree(root, seed) is None:
             direction, prob_records, curr_r = search_first_node(start=seed, prob_records=prob_records)
             search_line(start=seed, curr_r=curr_r, prob_records=prob_records, direction=direction, root=root)
+    

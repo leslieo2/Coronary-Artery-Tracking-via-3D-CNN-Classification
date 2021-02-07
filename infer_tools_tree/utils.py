@@ -71,6 +71,10 @@ def data_preprocess(img):
 
 
 def get_shell(fl_Num_Points, fl_Radius):
+    '''
+    在以fl_Radius为半径的球面上寻找最多fl_Num_Points个点，
+    这些点与球心相连形成的方向作为当前中心线的方向的候选点
+    '''
     x_list = []
     y_list = []
     z_list = []
@@ -92,6 +96,8 @@ def get_shell(fl_Num_Points, fl_Radius):
 
 
 def prob_terminates(pre_y, max_points):
+
+    device = torch.device("cpu")
 
     res = torch.sum(-pre_y * torch.log2(pre_y))
     return res / torch.log2(torch.from_numpy(np.array([max_points])).float().to(device))

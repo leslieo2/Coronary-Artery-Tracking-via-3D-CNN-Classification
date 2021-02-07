@@ -29,15 +29,22 @@ def creat_data(max_points,path_name,spacing_path,gap_size,save_num):
     spacing_z = spacing_info[i][2]
     re_spacing_img, curr_spacing, resize_factor = resample(src_array, np.array([spacing_z, spacing_x, spacing_y]),
                                                            np.array([0.5, 0.5, 0.5]))
+    # 针对4个动脉管道                                                    
     for v in range(4):
         print("processing vessel %d" % v)
+        # 这个文件的数据每一列都代表什么？
         reference_path = path_name + '0' + str(i) + '/' + 'vessel' + str(v) + '/' + 'reference.txt'
+        # 这里的结果是一个二维数组
         txt_data = np.loadtxt(reference_path, dtype=np.float32)
+        # 前三列: 人工标记的中心点
         center = txt_data[..., 0:3]
 
+        # 第三列: 每个点的半径
         radials_data = txt_data[..., 3]
-        start_ind = get_start_ind(center, radials_data)
 
+        # 这里start_ind是从第一个点开始的
+        # 相应的，end_ind从倒数第二个点开始
+        start_ind = get_start_ind(center, radials_data)
         end_ind = get_end_ind(center, radials_data)
 
         print("start ind:", start_ind)
@@ -50,6 +57,7 @@ def creat_data(max_points,path_name,spacing_path,gap_size,save_num):
 
         for j in range(start_ind, end_ind + 1):
         # for j in range(start_ind, start_ind + 1):
+            # gap_size设置了1，其实是遍历了每个点
             if j % gap_size == 0:
                 # print('j:', j)
                 center_x = center[j][0]
@@ -79,6 +87,7 @@ def creat_data(max_points,path_name,spacing_path,gap_size,save_num):
                         next_y = center[next_ind][1]
                         next_z = center[next_ind][2]
 
+                        # 这里的max_points具体含义是什么
                         sx, sy, sz = get_shell(max_points, radial)
                         shell_arr = np.zeros((len(sx), 3))
                         for s_ind in range(len(sx)):
@@ -86,12 +95,14 @@ def creat_data(max_points,path_name,spacing_path,gap_size,save_num):
                             shell_arr[s_ind][1] = sy[s_ind]
                             shell_arr[s_ind][2] = sz[s_ind]
 
+                        # 当前中心点的像素
                         center_x_pixel = get_spacing_res2(center_x, spacing_x, resize_factor[1])
                         center_y_pixel = get_spacing_res2(center_y, spacing_y, resize_factor[2])
                         center_z_pixel = get_spacing_res2(center_z, spacing_z, resize_factor[0])
 
                         curr_c = [center_x, center_y, center_z]
                         p = [pre_x, pre_y, pre_z]
+                        # 寻找当前中心点和前一个中心点组成的向量（方向）和（sx, sy, sz）的哪一个最接近
                         pre_sim = find_closer_point_angle(shell_arr, p, curr_c)
                         p = [next_x, next_y, next_z]
                         next_sim = find_closer_point_angle(shell_arr, p, curr_c)

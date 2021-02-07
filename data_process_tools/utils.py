@@ -12,6 +12,7 @@ from scipy.ndimage import map_coordinates
 import copy
 np.random.seed(4)
 
+# 重新采样有什么作用？
 def resample(imgs, spacing, new_spacing,order = 2):
     '''
     :param imgs: Original image arr
@@ -20,6 +21,7 @@ def resample(imgs, spacing, new_spacing,order = 2):
     :param order:zoom order
     :return:
     '''
+    # 3D图像
     if len(imgs.shape)==3:
         new_shape = np.round(imgs.shape * spacing / new_spacing)
 
@@ -78,6 +80,7 @@ def get_spacing_res2(x,spacing_x,spacing_new):
 
 def get_start_ind(center_points,radials_data):
     '''
+    搜索一个距离冠状动脉入口3mm的点
     searching a point 3 mm from the entrance of the coronary artery
     :param center_points: center points arr
     :param radials_data: radials
@@ -93,6 +96,8 @@ def get_start_ind(center_points,radials_data):
         v1 = np.array([curr_x, curr_y, curr_z])
         v2 = center_points[i]
         dist = np.linalg.norm(v1 - v2)
+        # dist>=curr_r
+        # 保证找到的最接近的点是在，以(curr_x, curr_y,curr_z)为原点，curr_r为半径的球外
         if (dist-curr_r)<=ellipsis and dist>=curr_r:
             start_ind = i
             break
@@ -100,6 +105,7 @@ def get_start_ind(center_points,radials_data):
 
 def get_end_ind(center_points,radials_data):
     '''
+    搜索一个距离冠状动脉出口3mm的点
     searching a point 3 mm from the end of the coronary artery
     :param center_points: center points arr
     :param radials_data: radials
@@ -122,6 +128,7 @@ def get_end_ind(center_points,radials_data):
 
 def get_pre_next_point_ind(center_points,radials_data,center_ind):
     '''
+    寻找当前中心点的上一个和下一个点
     Find the previous point and the next point R from the current center point
     :param center_points: center points arr
     :param radials_data: radial data

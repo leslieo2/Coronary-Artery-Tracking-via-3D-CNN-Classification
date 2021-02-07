@@ -27,6 +27,8 @@ class Trainer(object):
         self.initial_lr = initial_lr
         self.max_points = max_points
         self.criterion = criterion
+        # mean squared error
+        # 均方误差
         self.criterion_2 = torch.nn.MSELoss()
         self.all_tr_loss = []
         self.all_val_loss = []
@@ -98,6 +100,7 @@ class Trainer(object):
         val_radius_loss = 0.
         correct = 0
         total = 0
+        # 惩罚因子
         punishment_factor = 15
         if True:
             for idx, (inputs, labels, r) in enumerate(self.val_loader):

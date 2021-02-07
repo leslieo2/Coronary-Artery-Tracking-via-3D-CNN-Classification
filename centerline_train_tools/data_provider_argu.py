@@ -22,6 +22,7 @@ class DataGenerater(Dataset):
         print("csv path:",data_path)
         csv_data = pd.read_csv(data_path)
         x_data = csv_data['patch_name']
+        # flag来指示是训练集还是验证集
         if self.flag == 'train' or self.flag == 'val':
             pre_ind = csv_data["pre_ind"]
             next_ind = csv_data["next_ind"]

@@ -29,6 +29,7 @@ for i in range(8):
     print("spacing",spacing)
     out_arr = sitk.GetArrayFromImage(itkimage)
     out = sitk.GetImageFromArray(out_arr)
+    # 将.mhd格式的数据转换为.nii.gz格式，后续直接从.nii.gz读取数据
     sitk.WriteImage(out, save_name)
     print(out_arr.shape)
 dataframe = pd.DataFrame({'spacing_x': spacing_x, 'spacing_y': spacing_y, 'spacing_z': spacing_z})

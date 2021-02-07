@@ -9,6 +9,7 @@ from models.centerline_net import CenterlineNet
 from data_provider_argu import DataGenerater
 from centerline_trainner import Trainer
 import torch
+
 def get_dataset(save_num = 0):
     '''
     :return: train set,val set
@@ -37,10 +38,12 @@ def cross_entropy(a, y):
 if __name__ == '__main__':
 
     # Here we use 8 fold cross validation, save_num means to use dataset0x as the validation set
+    # dataset01作为验证集，其他是训练集
     save_num = 1
     train_dataset, val_dataset = get_dataset(save_num)
 
     curr_model_name = "centerline_net"
+    # 球面上最多500个点，将所有的中心线方向进行分类，一共500个类
     max_points = 500
     model = CenterlineNet(n_classes = max_points)
 
@@ -48,6 +51,7 @@ if __name__ == '__main__':
     num_workers = 16
 
     criterion = cross_entropy
+    # 初始化的学习率
     inital_lr = 0.001
 
     optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, model.parameters()), lr=inital_lr,weight_decay=0.001)
