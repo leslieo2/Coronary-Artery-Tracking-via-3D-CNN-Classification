@@ -1,8 +1,3 @@
-# -*- coding: UTF-8 -*-
-# @Time    : 04/08/2020 18:55
-# @Author  : BubblyYi、QYD
-# @FileName: centerline_net.py
-# @Software: PyCharm
 import numpy as np
 from setting import src_array, spacing, seeds_model, ostia_model, device
 from utils import data_preprocess, resample, crop_heart

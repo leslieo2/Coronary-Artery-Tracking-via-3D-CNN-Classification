@@ -8,6 +8,7 @@ import cv2
 from skimage import measure
 import pandas as pd
 
+
 def resample(imgs, spacing, new_spacing, order=2):
     if len(imgs.shape) == 3:
         new_shape = np.round(imgs.shape * spacing / new_spacing)
@@ -41,7 +42,8 @@ def get_start_ind(center_points):
     ellipsis = 0.1
     for i in range(1, len(center_points)):
         v1 = np.array([curr_x, curr_y, curr_z])
-        v2 = np.array([center_points[i][0], center_points[i][1], center_points[i][2]])
+        v2 = np.array([center_points[i][0], center_points[i]
+                       [1], center_points[i][2]])
         dist = np.linalg.norm(v1 - v2)
         if (dist - curr_r) <= ellipsis and dist >= curr_r:
             start_ind = i
@@ -96,9 +98,7 @@ def get_shell(fl_Num_Points, fl_Radius):
 
 
 def prob_terminates(pre_y, max_points):
-
-    device = torch.device("cpu")
-
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     res = torch.sum(-pre_y * torch.log2(pre_y))
     return res / torch.log2(torch.from_numpy(np.array([max_points])).float().to(device))
 
@@ -123,6 +123,7 @@ def get_angle(v1, v2):
     cosangle = np.clip(cosangle, -1, 1)
     return math.degrees(np.arccos(cosangle))
 
+
 def save_info(res: list, path: str):
     x_list = []
     y_list = []
@@ -134,7 +135,8 @@ def save_info(res: list, path: str):
     dataframe = pd.DataFrame(
         {'x': x_list, 'y': y_list, 'z': z_list})
     dataframe.to_csv(path, index=False,
-                     columns=['x', 'y', 'z'], sep=',',float_format='%.5f')
+                     columns=['x', 'y', 'z'], sep=',', float_format='%.5f')
+
 
 def crop_heart(input_arr):
     '''
@@ -154,7 +156,8 @@ def crop_heart(input_arr):
         image = src_array[k][:, :]
         ret, thresh = cv2.threshold(image, 20, 400, cv2.THRESH_BINARY)
         kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
-        opening = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, kernel, anchor=(-1, -1), iterations=4)
+        opening = cv2.morphologyEx(
+            thresh, cv2.MORPH_OPEN, kernel, anchor=(-1, -1), iterations=4)
 
         label_opening = measure.label(opening)
         regionprops = measure.regionprops(label_opening)

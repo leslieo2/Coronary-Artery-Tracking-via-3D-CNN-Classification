@@ -1,8 +1,3 @@
-# -*- coding: UTF-8 -*-
-# @Time    : 14/05/2020 17:56
-# @Author  : BubblyYi
-# @FileName: ostia_train_tools.py
-# @Software: PyCharm
 import sys
 sys.path.append('..')
 from models.ostiapoints_net import OstiapointsNet
