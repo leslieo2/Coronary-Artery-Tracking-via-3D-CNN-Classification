@@ -7,7 +7,7 @@ from build_vessel_tree import build_vessel_tree, TreeNode, dfs_search_tree
 from utils import save_info
 import os
 
-# res_seeds, res_ostia = search_seeds_ostias()
+res_seeds, res_ostia = search_seeds_ostias()
 seeds_gen_info_to_save = os.path.join(
     setting_info["seeds_gen_info_to_save"], "seeds.csv")
 ostias_gen_info_to_save = os.path.join(
@@ -15,8 +15,8 @@ ostias_gen_info_to_save = os.path.join(
 infer_line_to_save = setting_info["infer_line_to_save"]
 fig_to_save = setting_info["fig_to_save"]
 reference_path = setting_info["reference_path"]
-# save_info(res_seeds, path=seeds_gen_info_to_save)
-# save_info(res_ostia, path=ostias_gen_info_to_save)
+save_info(res_seeds, path=seeds_gen_info_to_save)
+save_info(res_ostia, path=ostias_gen_info_to_save)
 seeds = pd.read_csv(seeds_gen_info_to_save)[["x", "y", "z"]].values
 
 

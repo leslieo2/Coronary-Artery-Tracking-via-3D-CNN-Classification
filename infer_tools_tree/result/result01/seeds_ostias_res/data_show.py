@@ -11,10 +11,10 @@ fig, ax = plt.subplots()
 # fig = plt.figure()
 ax = plt.axes(projection='3d')
 
-# x = seeds['x']
-# y = seeds['y']
-# z = seeds['z']
-# ax.scatter(x, y, z)
+x = seeds['x']
+y = seeds['y']
+z = seeds['z']
+ax.scatter(x, y, z)
 # ax.set_title('seeds distribution')
 x, y, z = ostias['x'], ostias['y'], ostias['z']
 ax.scatter(x, y, z)
