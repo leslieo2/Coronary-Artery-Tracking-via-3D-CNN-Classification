@@ -83,7 +83,7 @@ python3 centerline_patch_generater_offset.py
 4. Create seeds patch data         
 
 $ Create positve samples
-python3 seedpoints_patch_generater_postive.py     
+python3 seedpoints_patch_generater_positive.py     
 
 $ Create negative sample    
 python3 seedpoints_patch_generater_negative.py
