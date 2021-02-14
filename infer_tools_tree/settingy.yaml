@@ -10,6 +10,6 @@ infer_line_to_save: result/result01/vessel_res
 fig_to_save: result/result01/fig_res
 max_points: 500
 gpuid: 0
-# prob_thr: 0.64 # probability distribution crosses a threshold value
-prob_thr: 0.85
+prob_thr: 0.64 # probability distribution crosses a threshold value
+# prob_thr: 0.85
 max_size: [200,10]

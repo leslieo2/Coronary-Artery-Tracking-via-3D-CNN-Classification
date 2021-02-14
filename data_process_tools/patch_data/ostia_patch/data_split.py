@@ -28,7 +28,7 @@ def to_csv():
     # 随机打乱数据
     df = df.sample(frac=1)
     n = len(df)
-    train, val = df[int(n/8):int(7*n/8)], df[0:int(n/8)]
+    train, val = df[int(n/8):n], df[0:int(n/8)]
     train.to_csv('train_save_d1_train.csv', index=0)
     val.to_csv('train_save_d1_val.csv', index=0)
 

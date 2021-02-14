@@ -7,7 +7,7 @@ from build_vessel_tree import build_vessel_tree, TreeNode, dfs_search_tree
 from utils import save_info
 import os
 
-res_seeds, res_ostia = search_seeds_ostias()
+# res_seeds, res_ostia = search_seeds_ostias()
 seeds_gen_info_to_save = os.path.join(
     setting_info["seeds_gen_info_to_save"], "seeds.csv")
 ostias_gen_info_to_save = os.path.join(
@@ -15,8 +15,8 @@ ostias_gen_info_to_save = os.path.join(
 infer_line_to_save = setting_info["infer_line_to_save"]
 fig_to_save = setting_info["fig_to_save"]
 reference_path = setting_info["reference_path"]
-save_info(res_seeds, path=seeds_gen_info_to_save)
-save_info(res_ostia, path=ostias_gen_info_to_save)
+# save_info(res_seeds, path=seeds_gen_info_to_save)
+# save_info(res_ostia, path=ostias_gen_info_to_save)
 seeds = pd.read_csv(seeds_gen_info_to_save)[["x", "y", "z"]].values
 
 
@@ -49,11 +49,12 @@ else:
     print("build vessel tree")
     print('ostia: ', ostias)
     root = TreeNode(ostias, start_point_index=None)
-    dfs(root)
+    # dfs(root)
     build_vessel_tree(seeds, root=root)  # 这里存在问题，root节点未发生变化
     # print('root => ', root)
     single_tree = dfs_search_tree(root)
-    # print('single_tree => ', single_tree)
+    print('single_tree => ', single_tree)
+    # dfs(single_tree)
     vessel_tree_postprocess = []
     for vessel_list in single_tree:
         vessel_list.pop(0)
