@@ -31,11 +31,6 @@ ostias = []
 head_node_list = pd.read_csv(ostias_gen_info_to_save)[
     ["x", "y", "z"]].values  # 冠状动脉口
 
-# head_node_list = head_node_list.T
-# plt.show(head_node_list[0], head_node_list[1], head_node_list[2])
-
-# exit(0)
-
 ostias_thr = 10
 node_first = head_node_list[0]
 ostias.append(node_first.tolist())
@@ -49,12 +44,9 @@ else:
     print("build vessel tree")
     print('ostia: ', ostias)
     root = TreeNode(ostias, start_point_index=None)
-    # dfs(root)
     build_vessel_tree(seeds, root=root)  # 这里存在问题，root节点未发生变化
-    # print('root => ', root)
     single_tree = dfs_search_tree(root)
     print('single_tree => ', single_tree)
-    # dfs(single_tree)
     vessel_tree_postprocess = []
     for vessel_list in single_tree:
         vessel_list.pop(0)
@@ -83,7 +75,6 @@ else:
     ax.legend()
     plt.rcParams['savefig.dpi'] = 300
     plt.rcParams['figure.dpi'] = 300
-    # plt.show()
     plt.savefig(fig_to_save + "/infer_tree_new.jpg")
     ax1 = plt.axes(projection='3d')
     for i in range(4):
@@ -99,7 +90,6 @@ else:
     ax1.legend()
     plt.rcParams['savefig.dpi'] = 300
     plt.rcParams['figure.dpi'] = 300
-    # plt.show()
     plt.savefig(fig_to_save + '/refer_infer_tree.jpg')
     ax2 = plt.axes(projection='3d')
     for i in range(4):
@@ -112,7 +102,6 @@ else:
     ax2.legend()
     plt.rcParams['savefig.dpi'] = 300
     plt.rcParams['figure.dpi'] = 300
-    # plt.show()
     plt.savefig(fig_to_save + '/refer_tree.jpg')
 
     ax3 = plt.axes(projection='3d')
@@ -125,7 +114,6 @@ else:
     ax3.legend()
     plt.rcParams['savefig.dpi'] = 300
     plt.rcParams['figure.dpi'] = 300
-    # plt.show()
     plt.savefig(
         fig_to_save + '/seeds_points.jpg')
 
@@ -143,6 +131,5 @@ else:
     ax4.legend()
     plt.rcParams['savefig.dpi'] = 300
     plt.rcParams['figure.dpi'] = 300
-    # plt.show()
     plt.savefig(
         fig_to_save + "/seeds_points.jpg")
