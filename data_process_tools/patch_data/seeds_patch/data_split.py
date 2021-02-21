@@ -13,7 +13,9 @@ def get_csv_path(data_dir):
 
 def to_csv():
     negative = get_csv_path(data_dir='negative/gp_19/')
-    positive = get_csv_path(data_dir='positive/gp_100/')
+    positive = []
+    # 此处暂全部使用负样本
+    # positive = get_csv_path(data_dir='positive/gp_100/')
     all_csv = negative + positive
     print('all_csv: ', all_csv)
     df = pd.DataFrame()
