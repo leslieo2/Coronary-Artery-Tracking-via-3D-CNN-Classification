@@ -13,7 +13,8 @@ def get_csv_path(data_dir):
 
 def to_csv():
     negative = get_csv_path(data_dir='negative/gp_1/')
-    postive = get_csv_path(data_dir='postive/gp_1/')
+    # postive = get_csv_path(data_dir='postive/gp_1/')
+    postive = []
     all_csv = negative + postive
     print('all_csv: ', all_csv)
     df = pd.DataFrame()
