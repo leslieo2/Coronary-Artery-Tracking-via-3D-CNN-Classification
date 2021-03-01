@@ -46,7 +46,7 @@ for idx, (inputs, labels, r) in enumerate(test_loader):
     print('labels: ', labels)
     inputs, labels, r = inputs.to(device), labels.to(
         device), r.to(device)
-    outputs = model(inputs)
+    outputs = model['model'](inputs)
     outputs = outputs.view((len(labels), max_points+1))
     outputs_1 = outputs[:, :len(outputs[0])-1]  # 方向分类器
     outputs_2 = outputs[:, -1]  # 半径回归器

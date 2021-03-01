@@ -339,8 +339,8 @@ def build_vessel_tree(seeds: np.ndarray, root: TreeNode):
     '''
     prob_records = [0] * 3
     seeds_unused = []
-    print('bofore: ', len(seeds) // 10)
-    for seed in seeds[:len(seeds) // 10]:
+    # print('bofore: ', len(seeds) // 10)
+    for seed in seeds[:len(seeds)]:
         if search_tree(root, seed) is None:
             # 寻找初始化的点和半径，得到两个初始化的方向d0和d0'
             direction, prob_records, curr_r = search_first_node(start=seed, prob_records=prob_records)

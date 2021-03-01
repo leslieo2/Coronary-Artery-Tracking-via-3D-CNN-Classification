@@ -1,23 +1,19 @@
-# -*- coding: UTF-8 -*-
-# @Time    : 14/05/2020 16:48
-# @Author  : BubblyYi
-# @FileName: seeds_trainner.py
-# @Software: PyCharm
-
+from datetime import datetime
+import sys
+from time import time
+from torch.utils.data import DataLoader
+import torch
+import matplotlib.pyplot as plt
 import os
 import matplotlib
 matplotlib.use('AGG')
-import matplotlib.pyplot as plt
-import torch
-from torch.utils.data import DataLoader
-from time import time
-import sys
-from datetime import datetime
+
 
 class Trainer(object):
-    def __init__(self, batch_size, num_workers, train_dataset, val_dataset, model, model_name, optimizer, criterion, save_num = 0,start_epoch=0, max_epoch=1000, initial_lr=0.01, checkpoint_path=None):
+    def __init__(self, batch_size, num_workers, train_dataset, val_dataset, model, model_name, optimizer, criterion, save_num=0, start_epoch=0, max_epoch=1000, initial_lr=0.01, checkpoint_path=None):
 
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.device = torch.device(
+            "cuda" if torch.cuda.is_available() else "cpu")
         self.batch_size = batch_size
         self.num_workers = num_workers
         self.train_dataset = train_dataset
@@ -45,8 +41,10 @@ class Trainer(object):
         self.start_epoch = start_epoch
         self.max_epoch = max_epoch
 
-        self.train_loader = DataLoader(self.train_dataset, batch_size=self.batch_size, shuffle=True, num_workers=self.num_workers)
-        self.val_loader = DataLoader(self.val_dataset, batch_size=self.batch_size, shuffle=True, num_workers=self.num_workers)
+        self.train_loader = DataLoader(
+            self.train_dataset, batch_size=self.batch_size, shuffle=True, num_workers=self.num_workers)
+        self.val_loader = DataLoader(
+            self.val_dataset, batch_size=self.batch_size, shuffle=True, num_workers=self.num_workers)
         self.checkpoint_path = checkpoint_path
         self.output_folder = "logs"
         if not os.path.exists(self.output_folder):
@@ -71,7 +69,8 @@ class Trainer(object):
             train_loss += loss.item()
             total += labels.size(0)
 
-        print_str = "Train Loss:{:.5f} Total :{:}".format(train_loss / len(self.train_loader),total)
+        print_str = "Train Loss:{:.5f} Total :{:}".format(
+            train_loss / len(self.train_loader), total)
 
         self.print_to_log_file(print_str)
 
@@ -89,10 +88,11 @@ class Trainer(object):
                 loss = self.criterion(outputs.float(), labels.float())
                 test_loss += loss.item()
                 total += labels.size(0)
-        print_str = "Val Loss:{:.5f} Total:{:}".format(test_loss / len(self.val_loader),total)
+        print_str = "Val Loss:{:.5f} Total:{:}".format(
+            test_loss / len(self.val_loader), total)
 
         self.print_to_log_file(print_str)
-        print("test loss",test_loss/len(self.val_loader))
+        print("test loss", test_loss/len(self.val_loader))
         print("best test loss", self.best_test_loss)
         if (test_loss/len(self.val_loader)) < self.best_test_loss:
             print("saving model")
@@ -100,7 +100,8 @@ class Trainer(object):
             save_fold = "../checkpoint/seeds_checkpoints"
             if not os.path.exists(save_fold):
                 os.makedirs(save_fold)
-            model_save_path = save_fold+ "/" + self.model_name + "_model_s"+str(self.save_num)+".pkl"
+            model_save_path = save_fold + "/" + self.model_name + \
+                "_model_s"+str(self.save_num)+".pkl"
             self.save_best_checkpoint(model_save_path, test_loss, epoch)
             print_str = "Saving parameters to " + model_save_path
             self.print_to_log_file(print_str)
@@ -112,7 +113,8 @@ class Trainer(object):
 
     def lr_decay(self, epoch, max_epochs, initial_lr):
         for params in self.optimizer.param_groups:
-            params['lr'] = self.poly_lr(epoch, max_epochs, initial_lr, exponent=1.5)
+            params['lr'] = self.poly_lr(
+                epoch, max_epochs, initial_lr, exponent=1.5)
             lr = params['lr']
             print_str = "Learning rate adjusted to {}".format(lr)
             self.print_to_log_file(print_str)
@@ -120,14 +122,15 @@ class Trainer(object):
     def plot_progress(self, epoch):
 
         x_epoch = list(range(len(self.all_tr_loss)))
-        plt.plot(x_epoch, self.all_tr_loss, color="b", linestyle="--", marker="*", label='train')
-        plt.plot(x_epoch, self.all_val_loss, color="r", linestyle="--", marker="*", label='val')
+        plt.plot(x_epoch, self.all_tr_loss, color="b",
+                 linestyle="--", marker="*", label='train')
+        plt.plot(x_epoch, self.all_val_loss, color="r",
+                 linestyle="--", marker="*", label='val')
         plt.legend()
         plt.rcParams['savefig.dpi'] = 300
         plt.rcParams['figure.dpi'] = 300
         plt.savefig("Total_loss_seeds_model_s"+str(self.save_num)+".jpg")
         plt.close()
-
 
     def save_best_checkpoint(self, model_save_path, curr_loss, epoch):
         checkpoint = {
@@ -155,8 +158,8 @@ class Trainer(object):
                 os.mkdir(self.output_folder)
             timestamp = datetime.now()
             self.log_file = os.path.join(self.output_folder, "training_log_%d_%d_%d_%02.0d_%02.0d_%02.0d.txt" %
-                                 (timestamp.year, timestamp.month, timestamp.day, timestamp.hour, timestamp.minute,
-                                  timestamp.second))
+                                         (timestamp.year, timestamp.month, timestamp.day, timestamp.hour, timestamp.minute,
+                                          timestamp.second))
             with open(self.log_file, 'w') as f:
                 f.write("Starting... \n")
         successful = False
@@ -171,7 +174,8 @@ class Trainer(object):
                     f.write("\n")
                 successful = True
             except IOError:
-                print("%s: failed to log: " % datetime.fromtimestamp(timestamp), sys.exc_info())
+                print("%s: failed to log: " %
+                      datetime.fromtimestamp(timestamp), sys.exc_info())
                 ctr += 1
         if also_print_to_console:
             print(*args)
@@ -186,6 +190,3 @@ class Trainer(object):
             self.all_val_loss.append(val_loss)
             self.plot_progress(epoch)
             self.lr_decay(epoch, self.max_epoch, self.initial_lr)
-
-
-

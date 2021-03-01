@@ -1,24 +1,19 @@
-# -*- coding: UTF-8 -*-
-# @Time    : 12/05/2020 20:06
-# @Author  : BubblyYi
-# @FileName: patch_generater.py
-# @Software: PyCharm
-
+from utils import resample, get_shell, get_proximity, get_closer_distence
+import os
+import warnings
+from scipy.ndimage.interpolation import zoom
+import math
+import pandas as pd
+import numpy as np
+from mpl_toolkits.mplot3d import axes3d
+import matplotlib.pyplot as plt
 import SimpleITK as sitk
 import matplotlib
 matplotlib.use('AGG')
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import axes3d
-import numpy as np
-import pandas as pd
-import math
-from scipy.ndimage.interpolation import zoom
-import warnings
-import os
 np.random.seed(4)
-from utils import resample, get_shell, get_proximity, get_closer_distence
 
-def creat_data(path_name,spacing_path,gap_size,save_num):
+
+def creat_data(path_name, spacing_path, gap_size, save_num):
     spacing_info = np.loadtxt(spacing_path,
                               delimiter=",", dtype=np.float32)
     proximity_list = []
@@ -27,7 +22,8 @@ def creat_data(path_name,spacing_path,gap_size,save_num):
     print("processing dataset %d" % i)
     image_pre_fix = path_name + '0' + str(i) + '/' + 'image' + '0' + str(i)
     file_name = image_pre_fix + '.nii.gz'
-    src_array = sitk.GetArrayFromImage(sitk.ReadImage(file_name, sitk.sitkFloat32))
+    src_array = sitk.GetArrayFromImage(
+        sitk.ReadImage(file_name, sitk.sitkFloat32))
 
     spacing_x = spacing_info[i][0]
     spacing_y = spacing_info[i][1]
@@ -39,7 +35,8 @@ def creat_data(path_name,spacing_path,gap_size,save_num):
 
     vessels = []
     for j in range(4):
-        reference_path = 'train_data/dataset0'+str(i)+'/vessel' + str(j) + '/reference.txt'
+        reference_path = 'train_data/dataset0' + \
+            str(i)+'/vessel' + str(j) + '/reference.txt'
         txt_data = np.loadtxt(reference_path, dtype=np.float32)
         temp_center = txt_data[..., 0:3]
         vessels.append(temp_center)
@@ -49,7 +46,8 @@ def creat_data(path_name,spacing_path,gap_size,save_num):
     max_points = 30
     for v in range(4):
         print("processing vessel %d" % v)
-        reference_path = path_name + '0' + str(i) + '/' + 'vessel' + str(v) + '/' + 'reference.txt'
+        reference_path = path_name + '0' + \
+            str(i) + '/' + 'vessel' + str(v) + '/' + 'reference.txt'
         txt_data = np.loadtxt(reference_path, dtype=np.float32)
         center = txt_data[..., 0:3]
 
@@ -69,28 +67,31 @@ def creat_data(path_name,spacing_path,gap_size,save_num):
                 org_x_pixel = int(round(center_x))
                 org_y_pixel = int(round(center_y))
                 org_z_pixel = int(round(center_z))
-                record_set.add((org_x_pixel,org_y_pixel,org_z_pixel))
-                if org_x_pixel!=last_center_x_pixel or org_y_pixel!=last_center_y_pixel or org_z_pixel!=last_center_z_pixel:
+                record_set.add((org_x_pixel, org_y_pixel, org_z_pixel))
+                if org_x_pixel != last_center_x_pixel or org_y_pixel != last_center_y_pixel or org_z_pixel != last_center_z_pixel:
                     last_center_x_pixel = org_x_pixel
                     last_center_y_pixel = org_y_pixel
                     last_center_z_pixel = org_z_pixel
-                    for k in range(1,max_range+1):
-                        x_list,y_list,z_list = get_shell(max_points,k)
+                    for k in range(1, max_range+1):
+                        x_list, y_list, z_list = get_shell(max_points, k)
                         for m in range(len(x_list)):
                             new_x = int(round(center_x + x_list[m]))
                             new_y = int(round(center_y + y_list[m]))
                             new_z = int(round(center_z + z_list[m]))
-                            check_temp = (new_x,new_y,new_z)
+                            check_temp = (new_x, new_y, new_z)
                             if check_temp not in record_set:
                                 record_set.add(check_temp)
                                 center_x_pixel = new_x
                                 center_y_pixel = new_y
                                 center_z_pixel = new_z
 
-                                target_point = np.array([center_x_pixel, center_y_pixel, center_z_pixel])
+                                target_point = np.array(
+                                    [center_x_pixel, center_y_pixel, center_z_pixel])
                                 # print("new center:", target_point)
-                                min_dis = get_closer_distence(vessels, target_point)
-                                curr_proximity = get_proximity(min_dis,cutoff_value=4)
+                                min_dis = get_closer_distence(
+                                    vessels, target_point)
+                                curr_proximity = get_proximity(
+                                    min_dis, cutoff_value=4)
                                 # print('proximity:', curr_proximity)
                                 cut_size = 9
 
@@ -101,16 +102,20 @@ def creat_data(path_name,spacing_path,gap_size,save_num):
                                 left_z = center_z_pixel - cut_size
                                 right_z = center_z_pixel + cut_size
 
-                                if (right_z + 1) < len(re_spacing_img) and left_z >= 0 and (right_y + 1) < max_y and left_y >= 0 and (right_x + 1) < max_x and left_x >= 0 and curr_proximity>0:
-                                    new_src_arr = np.zeros((cut_size * 2 + 1, cut_size * 2 + 1, cut_size * 2 + 1))
+                                if (right_z + 1) < len(re_spacing_img) and left_z >= 0 and (right_y + 1) < max_y and left_y >= 0 and (right_x + 1) < max_x and left_x >= 0 and curr_proximity > 0:
+                                    new_src_arr = np.zeros(
+                                        (cut_size * 2 + 1, cut_size * 2 + 1, cut_size * 2 + 1))
                                     for ind in range(left_z, right_z + 1):
                                         src_temp = re_spacing_img[ind].copy()
-                                        new_src_arr[ind - left_z] = src_temp[left_y:right_y + 1, left_x:right_x + 1]
+                                        new_src_arr[ind - left_z] = src_temp[left_y:right_y +
+                                                                             1, left_x:right_x + 1]
 
-                                    folder_path = './patch_data/seeds_patch/positive/' + 'gp_' + str(gap_size) + '/d' + str(i)
+                                    folder_path = './patch_data/seeds_patch/positive/' + \
+                                        'gp_' + str(gap_size) + '/d' + str(i)
                                     if not os.path.exists(folder_path):
                                         os.makedirs(folder_path)
-                                    record_name = 'seeds_patch/positive/' + 'gp_' + str(gap_size) + '/d' + str(i) + '/' + 'd_' + str(i) + '_v_' +str(v)+ '_x_' + str(center_x_pixel) + '_y_' + str(center_y_pixel) + '_z_' + str(center_z_pixel) + '.nii.gz'
+                                    record_name = 'seeds_patch/positive/' + 'gp_' + str(gap_size) + '/d' + str(i) + '/' + 'd_' + str(i) + '_v_' + str(
+                                        v) + '_x_' + str(center_x_pixel) + '_y_' + str(center_y_pixel) + '_z_' + str(center_z_pixel) + '.nii.gz'
                                     # print(record_name)
                                     org_name = './patch_data/' + record_name
                                     out = sitk.GetImageFromArray(new_src_arr)
@@ -125,18 +130,23 @@ def creat_data(path_name,spacing_path,gap_size,save_num):
 
     return patch_name, proximity_list
 
-def create_patch_images(path_name,spacing_path,gap_size):
+
+def create_patch_images(path_name, spacing_path, gap_size):
     for i in range(8):
-        patch_name,proximity_list = creat_data(path_name,spacing_path,gap_size,i)
+        patch_name, proximity_list = creat_data(
+            path_name, spacing_path, gap_size, i)
         dataframe = pd.DataFrame(
             {'patch_name': patch_name, 'proximity': proximity_list})
         print(dataframe.head())
-        csv_name = "./patch_data/seeds_patch/positive/"+ 'gp_' + str(gap_size)+'/'+'d'+str(i) + "_patch_info.csv"
-        dataframe.to_csv(csv_name, index=False, columns=['patch_name', 'proximity'], sep=',')
+        csv_name = "./patch_data/seeds_patch/positive/" + 'gp_' + \
+            str(gap_size)+'/'+'d'+str(i) + "_patch_info.csv"
+        dataframe.to_csv(csv_name, index=False, columns=[
+                         'patch_name', 'proximity'], sep=',')
         print("create patch info csv")
         print("down")
 
+
 path_name = 'train_data/dataset'
 spacing_path = 'spacing_info.csv'
-gap_size  = 100
-create_patch_images(path_name,spacing_path,gap_size)
+gap_size = 100
+create_patch_images(path_name, spacing_path, gap_size)
