@@ -1,9 +1,9 @@
 import torch
 from ostia_trainner import Trainer
 from ostia_net_data_provider_aug import DataGenerater
-from models.ostiapoints_net import OstiapointsNet
 import sys
 sys.path.append('..')
+from models.ostiapoints_net import OstiapointsNet
 
 
 def get_dataset(save_num=0):

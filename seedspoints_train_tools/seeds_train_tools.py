@@ -1,9 +1,9 @@
 import torch
 from seeds_trainner import Trainer
 from seeds_net_data_provider_aug import DataGenerater
-from models.seedspoints_net import SeedspointsNet
 import sys
 sys.path.append('..')
+from models.seedspoints_net import SeedspointsNet
 
 
 def get_dataset(save_num=0):
