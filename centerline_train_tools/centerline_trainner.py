@@ -67,17 +67,17 @@ class Trainer(object):
         punishment_factor = 15
         # labels 分类器标签
         for idx, (inputs, labels, r) in enumerate(self.train_loader):
-            print('inputs: ', torch.Tensor(inputs[0][0]).size())
-            print('labels: ', len(labels[0]))
+            # print('inputs: ', torch.Tensor(inputs[0][0]).size())
+            # print('labels: ', len(labels[0]))
             inputs, labels, r = inputs.to(self.device), labels.to(
                 self.device), r.to(self.device)
             outputs = self.model(inputs)
             outputs = outputs.view((len(labels), self.max_points+1))
             outputs_1 = outputs[:, :len(outputs[0])-1]  # 方向分类器
             outputs_2 = outputs[:, -1]  # 半径回归器
-            print('outputs: ', outputs)
-            print('outpouts_1: ', len(outputs_1[0]))
-            print('outpouts_2: ', outputs_2)
+            # print('outputs: ', outputs)
+            # print('outpouts_1: ', len(outputs_1[0]))
+            # print('outpouts_2: ', outputs_2)
             outputs_1 = torch.nn.functional.softmax(outputs_1, 1)
             loss_1 = self.criterion(outputs_1.float(), labels.float())
             loss_2 = self.criterion_2(outputs_2.float(), r.float())
