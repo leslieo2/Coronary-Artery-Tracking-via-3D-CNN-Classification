@@ -33,20 +33,20 @@ prob_thr = setting_info["prob_thr"]
 max_size = setting_info["max_size"]
 print("load net")
 infer_model = CenterlineNet(n_classes=max_points)
-checkpoint = torch.load(checkpoint_path_infer, map_location=torch.device("cpu"))
+checkpoint = torch.load(checkpoint_path_infer)
 net_dict = checkpoint['net_dict']
 infer_model.load_state_dict(net_dict)
 infer_model.to(device)
 infer_model.eval()
 
 seeds_model = SeedspointsNet()
-seeds_checkpoint = torch.load(checkpoint_path_seeds, map_location=torch.device("cpu"))['net_dict']
+seeds_checkpoint = torch.load(checkpoint_path_seeds)['net_dict']
 seeds_model.load_state_dict(seeds_checkpoint)
 seeds_model.to(device)
 seeds_model.eval()
 
 ostia_model = OstiapointsNet()
-ostia_checkpoint = torch.load(checkpoint_path_ostia, map_location=torch.device("cpu"))['net_dict']
+ostia_checkpoint = torch.load(checkpoint_path_ostia)['net_dict']
 ostia_model.load_state_dict(ostia_checkpoint)
 ostia_model.to(device)
 ostia_model.eval()

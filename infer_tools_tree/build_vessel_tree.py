@@ -31,8 +31,8 @@ def search_tree(root: TreeNode, point):
         print('vertex: {0}, piont: {1}, dis_all: {2}'.format(vertex.value, point, dis_all))
         dis = dis_all.min()
         index = dis_all.argmin()
-        # if dis < 3: # hardcode 3？
-        if dis < 70: 
+        if dis < 3: # hardcode 3？
+        # if dis < 70: 
             return vertex, index
         nodes = vertex.child_list #这里的list为空
         for w in nodes:

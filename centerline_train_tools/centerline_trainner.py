@@ -46,9 +46,9 @@ class Trainer(object):
         self.max_epoch = max_epoch
 
         self.train_loader = DataLoader(
-            self.train_dataset, batch_size=self.batch_size, shuffle=True, num_workers=self.num_workers)
+            self.train_dataset, batch_size=self.batch_size, shuffle=True, num_workers=self.num_workers, drop_last=True)
         self.val_loader = DataLoader(
-            self.val_dataset, batch_size=self.batch_size, shuffle=True, num_workers=self.num_workers)
+            self.val_dataset, batch_size=self.batch_size, shuffle=True, num_workers=self.num_workers, drop_last=True)
         self.checkpoint_path = checkpoint_path
         self.output_folder = "logs"
         if not os.path.exists(self.output_folder):
