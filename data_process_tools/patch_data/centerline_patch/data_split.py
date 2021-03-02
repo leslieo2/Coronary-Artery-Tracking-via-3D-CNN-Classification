@@ -1,6 +1,6 @@
 import pandas as pd
 
-size = 1
+size = 8
 
 
 def get_csv_path(data_dir):
@@ -28,8 +28,8 @@ def to_csv():
     # 随机打乱数据
     df = df.sample(frac=1)
     n = len(df)
-    df = df[0:int(n//512)]
-    n = len(df)
+    # df = df[0:int(n//512)]
+    # n = len(df)
     print('n={0}'.format(n))
     train, val = df[int(n/8):n], df[0:int(n/8)]
     print('train: {0}, val: {1}, rate: {2}.'.format(
