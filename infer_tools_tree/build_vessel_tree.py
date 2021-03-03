@@ -281,7 +281,7 @@ def search_line(start, curr_r, direction, prob_records, root: TreeNode):
 
     # If the current point is within 200 points from the end of the centerline,
     # it will be spliced with the current centerline, otherwise it will be set as a new branch
-    print('find_node_forward: {0}, find_node_backward: {1}'.format(find_node_forward, find_node_backward))
+    # print('find_node_forward: {0}, find_node_backward: {1}'.format(find_node_forward, find_node_backward))
     add_thr = 200
     if find_node_forward is not None:
         point_forward_list.reverse()
@@ -344,9 +344,9 @@ def build_vessel_tree(seeds: np.ndarray, root: TreeNode):
         if search_tree(root, seed) is None:
             # 寻找初始化的点和半径，得到两个初始化的方向d0和d0'
             direction, prob_records, curr_r = search_first_node(start=seed, prob_records=prob_records)
-            print('first node:', direction, prob_records, curr_r)
+            # print('first node:', direction, prob_records, curr_r)
             find = search_line(start=seed, curr_r=curr_r, prob_records=prob_records, direction=direction, root=root)
-            print('find: ', find)
+            # print('find: ', find)
             if not find:
                 seeds_unused.append(seed)
     print('seeds_unused: ', len(seeds_unused))

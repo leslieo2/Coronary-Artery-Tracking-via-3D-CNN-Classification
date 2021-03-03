@@ -3,7 +3,7 @@
 out
 gen
 train_data
-test_data_part1
+test_data
 no_offset
 offset
 positive

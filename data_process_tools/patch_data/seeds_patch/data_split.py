@@ -40,7 +40,7 @@ def to_csv():
         idx += 1
 
     negative_df_len = len(negative_df)
-    positive_df = positive_df.sample(frac=1)[0:negative_df_len]
+    positive_df = positive_df.sample(frac=1)[0:negative_df_len * 2]
     total_df = pd.concat([positive_df, negative_df], ignore_index=True)
 
     total_df = total_df.sample(frac=1)
