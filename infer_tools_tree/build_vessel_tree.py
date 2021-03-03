@@ -28,7 +28,7 @@ def search_tree(root: TreeNode, point):
         vertex = queue.pop(0)
         point = np.array(point)
         dis_all = np.linalg.norm(point - vertex.value, axis=1)
-        print('vertex: {0}, piont: {1}, dis_all: {2}'.format(vertex.value, point, dis_all))
+        # print('vertex: {0}, piont: {1}, dis_all: {2}'.format(vertex.value, point, dis_all))
         dis = dis_all.min()
         index = dis_all.argmin()
         if dis < 3: # hardcode 3？
@@ -55,8 +55,8 @@ def dfs_search_tree(root: TreeNode):
     while len(stack_list) > 0:
         temp = []
         x = stack_list[-1]
-        print('x.value => ', x.value)
-        print('x.childs => ', x.child_list)
+        # print('x.value => ', x.value)
+        # print('x.childs => ', x.child_list)
         for w in x.child_list:
             if w not in visited:
                 temp.append(w)
@@ -229,7 +229,7 @@ def search_one_direction(start: list, move_direction: list, prob_records: list, 
             start = next_point                    
             if find_node is None:
                 find_node_initial = search_tree(root, next_point)
-                print('find_node_initial => ', find_node_initial)
+                # print('find_node_initial => ', find_node_initial)
             # if cnt >= 3:
             #     break
         else:
