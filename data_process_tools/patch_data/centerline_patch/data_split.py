@@ -38,7 +38,7 @@ def to_csv():
                 [offset_df, single_data_frame], ignore_index=True)
         idx += 1
     no_offset_df_len = len(no_offset_df)
-    offset_df = offset_df.sample(frac=1)[0:no_offset_df_len]
+    offset_df = offset_df.sample(frac=1)[0:no_offset_df_len * 2]
 
     total_df = pd.concat([no_offset_df, offset_df], ignore_index=True)
     total_df = total_df.sample(frac=1)
