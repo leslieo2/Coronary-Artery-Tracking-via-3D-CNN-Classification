@@ -42,13 +42,13 @@ def to_csv():
         idx += 1
 
     negative_df_len = len(negative_df)
-    positive_df = positive_df.sample(frac=1)[0:negative_df_len // 4]
-    # total_df = pd.concat([positive_df, negative_df], ignore_index=True)
-    total_df = negative_df
+    positive_df = positive_df.sample(frac=1)[0:negative_df_len // 16]
+    total_df = pd.concat([positive_df, negative_df], ignore_index=True)
+    # total_df = negative_df
 
     total_df = total_df.sample(frac=1)
     n = len(total_df)
-    train, val = total_df[int(n/8):n], total_df[0:int(n/8)]
+    train, val = total_df[int(n/8)*2:n], total_df[0:int(n/8)*2]
     print('train: {0}, val: {1}, rate: {2}.'.format(
         len(train), len(val), len(train) / len(val)))
     train.to_csv('train_save_d1_train.csv', index=0)
