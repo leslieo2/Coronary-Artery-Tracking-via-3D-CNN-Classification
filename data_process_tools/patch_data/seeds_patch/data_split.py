@@ -6,6 +6,8 @@ size = 8
 def get_csv_path(data_dir):
     files = []
     for i in range(size):
+        if i == 1:
+            continue
         f = '{0}d{1}_patch_info.csv'.format(data_dir, i)
         files.append(f)
     return files
