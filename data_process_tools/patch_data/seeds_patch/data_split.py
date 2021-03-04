@@ -41,7 +41,8 @@ def to_csv():
 
     negative_df_len = len(negative_df)
     positive_df = positive_df.sample(frac=1)[0:negative_df_len // 4]
-    total_df = pd.concat([positive_df, negative_df], ignore_index=True)
+    # total_df = pd.concat([positive_df, negative_df], ignore_index=True)
+    total_df = negative_df
 
     total_df = total_df.sample(frac=1)
     n = len(total_df)
