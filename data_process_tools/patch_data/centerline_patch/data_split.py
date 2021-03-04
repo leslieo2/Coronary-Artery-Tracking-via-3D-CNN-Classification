@@ -6,8 +6,6 @@ size = 8
 def get_csv_path(data_dir):
     files = []
     for i in range(size):
-        if i == 1:
-            continue
         f = '{0}d{1}_patch_info_500.csv'.format(data_dir, i)
         files.append(f)
     return files
@@ -48,7 +46,7 @@ def to_csv():
     # df = df[0:int(n//512)]
     # n = len(df)
     print('n={0}'.format(n))
-    train, val = total_df[int(n/8):n], total_df[0:int(n/8)]
+    train, val = total_df[int(n/8) * 2:n], total_df[0:int(n/8) * 2]
     print('train: {0}, val: {1}, rate: {2}.'.format(
         len(train), len(val), len(train) / len(val)))
     train.to_csv('train_save_d1_train.csv', index=0)
